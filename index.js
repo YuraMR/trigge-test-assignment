@@ -19,6 +19,7 @@ const widgetButton = (target) => {
       console.log("widgetButton:init")
 
       const buttonElement = document.createElement("button")
+      buttonElement.setAttribute("widget", target.getAttribute("widget"))
       buttonElement.textContent = "BUTTON AFTER"
 
       target.parentNode.replaceChild(buttonElement, target)
