@@ -12,10 +12,21 @@ const widgetA = (target) => {
 
   }
 }
-const widgetB = (target) => {
+
+const widgetButton = (target) => {
   return {
     init: (done) => {
-      target.addEventListener("click", (e) => {})
+      console.log("widgetButton:init")
+
+      const buttonElement = document.createElement("button")
+      buttonElement.textContent = "BUTTON AFTER"
+
+      target.parentNode.replaceChild(buttonElement, target)
+      target = buttonElement
+
+      const eventHandler = (e) => console.log("Button clicked")
+      target.addEventListener("click", eventHandler)
+
       done()
     },
     destroy: () => {
@@ -39,7 +50,7 @@ const widgetC = (target) => {
 
 const WIDGETS = {
   a: widgetA,
-  b: widgetB,
+  button: widgetButton,
   c: widgetC,
 }
 
