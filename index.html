@@ -24,17 +24,17 @@
 
             if (root) {
               const { init, destroy } = flawlessWidgetLibrary({ target: root, callback });
-              await init({ root, callback });
+              setTimeout(async () => {
+                await init({ root, callback });
+              }, 5000);
+
               setTimeout(() => {
                 destroy();
-              }, 2000);
+              }, 5000);
             } else {
               console.error('Root element not found');
             }
           })();
         </script>
-    </body>
-
-
     </body>
 </html>

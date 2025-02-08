@@ -1,24 +1,62 @@
-console.log('Happy developing ✨')
+const getOriginalAttributes = (element) => ({
+  tagName: element.tagName.toLowerCase(),
+  parent: element.parentNode,
+  textContent: element.textContent,
+  widgetAttr: element.getAttribute("widget"),
+  // children: [...element.childNodes],
+  /** TODO: implement original event handler restoring */
+})
 
 const widgetA = (target) => {
+  const {
+    tagName: originalTag,
+    parent: originalParent,
+    textContent: originalTextContent,
+    widgetAttr,
+    children: originalChildren,
+  } = getOriginalAttributes(target)
+
   return {
     init: (done) => {
-      target.addEventListener("click", (e) => {})
+      console.log("widgetA:init")
+
+      const anchorElement = document.createElement("a")
+      anchorElement.setAttribute("widget", widgetAttr)
+
+      // originalChildren.forEach((child) => anchorElement.appendChild(child))
+
+      originalParent.replaceChild(anchorElement, target)
+      target = anchorElement
+
+      const eventHandler = () => console.log("Anchor clicked")
+      target.addEventListener("click", eventHandler)
+
       done()
     },
-    destroy: () => {
-      console.log("foo")
-    }
 
+    destroy: () => {
+      console.log("widgetA:destroy")
+
+      const restoredElement = document.createElement(originalTag)
+      restoredElement.setAttribute("widget", widgetAttr)
+      restoredElement.textContent = originalTextContent
+
+      originalChildren.forEach((child) => restoredElement.appendChild(child))
+
+      originalParent.replaceChild(restoredElement, target)
+      target = restoredElement
+    },
   }
 }
 
+
 const widgetButton = (target) => {
-  const originalTag = target.tagName.toLowerCase()
-  const originalParent = target.parentNode
-  const originalTextContent = target.textContent
-  const widgetAttr = target.getAttribute("widget")
-  /** TODO: implement original event handler restoring */
+  const {
+    tagName: originalTag,
+    parent: originalParent,
+    textContent: originalTextContent,
+    widgetAttr,
+  } = getOriginalAttributes(target)
 
   return {
     init: (done) => {
@@ -48,23 +86,48 @@ const widgetButton = (target) => {
     }
   }
 }
-const widgetC = (target) => {
+
+const widgetLabel = (target) => {
+  const {
+    tagName: originalTag,
+    parent: originalParent,
+    textContent: originalTextContent,
+    widgetAttr,
+  } = getOriginalAttributes(target)
+
   return {
     init: (done) => {
-      target.addEventListener("click", (e) => {})
+      console.log("widgetLabel:init")
+
+      const labelElement = document.createElement("label")
+      labelElement.setAttribute("widget", widgetAttr)
+      labelElement.textContent = "LABEL AFTER"
+
+      originalParent.replaceChild(labelElement, target)
+      target = labelElement
+
+      const eventHandler = () => console.log("Label clicked")
+      target.addEventListener("click", eventHandler)
+
       done()
     },
     destroy: () => {
-      console.log("foo")
-    }
+      console.log("widgetLabel:destroy")
 
+      const restoredElement = document.createElement(originalTag)
+      restoredElement.setAttribute("widget", widgetAttr)
+      restoredElement.textContent = originalTextContent
+
+      originalParent.replaceChild(restoredElement, target)
+      target = originalParent
+    },
   }
 }
 
 const WIDGETS = {
   a: widgetA,
   button: widgetButton,
-  c: widgetC,
+  label: widgetLabel,
 }
 
 const flawlessWidgetLibrary = ({ target, callback }) => {
