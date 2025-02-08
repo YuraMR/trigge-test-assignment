@@ -3,7 +3,7 @@ const getOriginalAttributes = (element) => ({
   parent: element.parentNode,
   textContent: element.textContent,
   widgetAttr: element.getAttribute("widget"),
-  // children: [...element.childNodes],
+  children: [...element.childNodes],
   /** TODO: implement original event handler restoring */
 })
 
@@ -23,7 +23,7 @@ const widgetA = (target) => {
       const anchorElement = document.createElement("a")
       anchorElement.setAttribute("widget", widgetAttr)
 
-      // originalChildren.forEach((child) => anchorElement.appendChild(child))
+      originalChildren.forEach((child) => anchorElement.appendChild(child))
 
       originalParent.replaceChild(anchorElement, target)
       target = anchorElement
@@ -41,14 +41,13 @@ const widgetA = (target) => {
       restoredElement.setAttribute("widget", widgetAttr)
       restoredElement.textContent = originalTextContent
 
-      originalChildren.forEach((child) => restoredElement.appendChild(child))
+      // originalChildren.forEach((child) => restoredElement.appendChild(child))
 
       originalParent.replaceChild(restoredElement, target)
       target = restoredElement
     },
   }
 }
-
 
 const widgetButton = (target) => {
   const {
@@ -83,6 +82,7 @@ const widgetButton = (target) => {
 
       originalParent.replaceChild(restoredElement, target)
       target = originalParent
+      // target = restoredElement
     }
   }
 }
@@ -93,6 +93,7 @@ const widgetLabel = (target) => {
     parent: originalParent,
     textContent: originalTextContent,
     widgetAttr,
+    children: originalChildren,
   } = getOriginalAttributes(target)
 
   return {
@@ -111,6 +112,7 @@ const widgetLabel = (target) => {
 
       done()
     },
+
     destroy: () => {
       console.log("widgetLabel:destroy")
 
@@ -119,7 +121,8 @@ const widgetLabel = (target) => {
       restoredElement.textContent = originalTextContent
 
       originalParent.replaceChild(restoredElement, target)
-      target = originalParent
+      target = restoredElement
+      // target = originalParent
     },
   }
 }
@@ -135,15 +138,29 @@ const flawlessWidgetLibrary = ({ target, callback }) => {
 
   const widgets = new Map()
 
+  const initQueue = []
+
+  const processInitQueue = async () => {
+    while (initQueue.length > 0) {
+      const { widget, done } = initQueue.shift()
+      await widget.init(done)
+    }
+  }
+
+  const queueWidgetInit = async (widget, done) => {
+    initQueue.push({ widget, done })
+
+    if (initQueue.length === 1) {
+      await processInitQueue()
+    }
+  }
+
   return {
-    init: () => {
+    init: async () => {
       let widgetsInitialized = 0
 
-      const traverse = (node) => {
-        console.log("flawlessWidgetLibrary:traverse", node)
-
+      const traverse = async (node) => {
         const widgetAttr = node.getAttribute("widget")
-
         if (widgetAttr) {
           const widgetName = widgetAttr.split("/")[1]
           const createWidget = WIDGETS[widgetName]
@@ -152,12 +169,12 @@ const flawlessWidgetLibrary = ({ target, callback }) => {
             const widgetInstance = createWidget(node)
             widgets.set(node, widgetInstance)
 
-            widgetInstance.init(() => {
+            await queueWidgetInit(widgetInstance, () => {
               widgetsInitialized++
-              // if (widgetsInitialized === widgets.size) {
-              //   console.log("All widgets initialized")
-              //   callback()
-              // }
+              if (widgetsInitialized === widgets.size) {
+                console.log("All widgets initialized")
+                callback()
+              }
             })
           }
         }
@@ -165,7 +182,7 @@ const flawlessWidgetLibrary = ({ target, callback }) => {
         Array.from(node.children).forEach(traverse)
       }
 
-      traverse(target)
+      await traverse(target)
     },
 
     destroy: () => {
@@ -173,9 +190,6 @@ const flawlessWidgetLibrary = ({ target, callback }) => {
         widgetInstance.destroy()
         widgets.delete(node)
       })
-    }
+    },
   }
 }
-
-
-

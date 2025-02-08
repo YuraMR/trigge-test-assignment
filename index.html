@@ -26,10 +26,10 @@
               const { init, destroy } = flawlessWidgetLibrary({ target: root, callback });
               setTimeout(async () => {
                 await init({ root, callback });
-              }, 5000);
 
-              setTimeout(() => {
-                destroy();
+                // setTimeout(() => {
+                //   destroy();
+                // }, 5000);
               }, 5000);
             } else {
               console.error('Root element not found');
