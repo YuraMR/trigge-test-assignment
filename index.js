@@ -14,26 +14,38 @@ const widgetA = (target) => {
 }
 
 const widgetButton = (target) => {
+  const originalTag = target.tagName.toLowerCase()
+  const originalParent = target.parentNode
+  const originalTextContent = target.textContent
+  const widgetAttr = target.getAttribute("widget")
+  /** TODO: implement original event handler restoring */
+
   return {
     init: (done) => {
       console.log("widgetButton:init")
 
       const buttonElement = document.createElement("button")
-      buttonElement.setAttribute("widget", target.getAttribute("widget"))
+      buttonElement.setAttribute("widget", widgetAttr)
       buttonElement.textContent = "BUTTON AFTER"
 
-      target.parentNode.replaceChild(buttonElement, target)
+      originalParent.replaceChild(buttonElement, target)
       target = buttonElement
 
-      const eventHandler = (e) => console.log("Button clicked")
+      const eventHandler = () => console.log("Button clicked")
       target.addEventListener("click", eventHandler)
 
       done()
     },
     destroy: () => {
-      console.log("foo")
-    }
+      console.log("widgetButton:destroy")
+      const restoredElement = document.createElement(originalTag)
 
+      restoredElement.setAttribute("widget", widgetAttr)
+      restoredElement.textContent = originalTextContent
+
+      originalParent.replaceChild(restoredElement, target)
+      target = originalParent
+    }
   }
 }
 const widgetC = (target) => {
