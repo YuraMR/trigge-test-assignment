@@ -12,52 +12,83 @@ const widgetA = (target) => {
 
   }
 }
+const widgetB = (target) => {
+  return {
+    init: (done) => {
+      target.addEventListener("click", (e) => {})
+      done()
+    },
+    destroy: () => {
+      console.log("foo")
+    }
+
+  }
+}
+const widgetC = (target) => {
+  return {
+    init: (done) => {
+      target.addEventListener("click", (e) => {})
+      done()
+    },
+    destroy: () => {
+      console.log("foo")
+    }
+
+  }
+}
 
 const WIDGETS = {
   a: widgetA,
-  b: widgetA,
-  c: widgetA,
+  b: widgetB,
+  c: widgetC,
 }
 
 const flawlessWidgetLibrary = ({ target, callback }) => {
   console.log("flawlessWidgetLibrary:start")
-  const widgets = []
-  
+
+  const widgets = new Map()
+
   return {
     init: () => {
       let widgetsInitialized = 0
+
       const traverse = (node) => {
+        console.log("flawlessWidgetLibrary:traverse", node)
 
-        console.log("flawlessWidgetLibrary:traverse")
-        console.log("node", node)
-        const widgetName = node.getAttribute("widget")
+        const widgetAttr = node.getAttribute("widget")
 
-        if (widgetName) {
-          const widgetName = node.getAttribute('widget').split("/")[1];
+        if (widgetAttr) {
+          const widgetName = widgetAttr.split("/")[1]
           const createWidget = WIDGETS[widgetName]
-          const widget = createWidget(node)
 
-          widget.init(() => {
-            widgetsInitialized++
-          })
-          widgets.push(widget)
+          if (createWidget) {
+            const widgetInstance = createWidget(node)
+            widgets.set(node, widgetInstance)
+
+            widgetInstance.init(() => {
+              widgetsInitialized++
+              // if (widgetsInitialized === widgets.size) {
+              //   console.log("All widgets initialized")
+              //   callback()
+              // }
+            })
+          }
         }
 
-        Array.from(node.children).forEach((child) => {
-          traverse(child)
-        })
+        Array.from(node.children).forEach(traverse)
       }
 
       traverse(target)
-
     },
 
     destroy: () => {
-
+      widgets.forEach((widgetInstance, node) => {
+        widgetInstance.destroy()
+        widgets.delete(node)
+      })
     }
-
   }
-
 }
+
 
 
