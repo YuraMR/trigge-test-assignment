@@ -1,34 +1,23 @@
 const getOriginalAttributes = (element) => ({
-  tagName: element.tagName.toLowerCase(),
-  parent: element.parentNode,
+  role: element.getAttribute("role"),
   textContent: element.textContent,
-  widgetAttr: element.getAttribute("widget"),
-  children: [...element.childNodes],
-  /** TODO: implement original event handler restoring */
 })
 
 const widgetA = (target) => {
   const {
-    tagName: originalTag,
-    parent: originalParent,
-    textContent: originalTextContent,
-    widgetAttr,
-    children: originalChildren,
+    role: originalRole,
   } = getOriginalAttributes(target)
+
+  const className = "widget-link";
+
+  const eventHandler = () => console.log("Link clicked")
 
   return {
     init: (done) => {
       console.log("widgetA:init")
 
-      const anchorElement = document.createElement("a")
-      anchorElement.setAttribute("widget", widgetAttr)
-
-      originalChildren.forEach((child) => anchorElement.appendChild(child))
-
-      originalParent.replaceChild(anchorElement, target)
-      target = anchorElement
-
-      const eventHandler = () => console.log("Anchor clicked")
+      target.setAttribute("role", "link")
+      target.classList.add(className)
       target.addEventListener("click", eventHandler)
 
       done()
@@ -37,77 +26,61 @@ const widgetA = (target) => {
     destroy: () => {
       console.log("widgetA:destroy")
 
-      const restoredElement = document.createElement(originalTag)
-      restoredElement.setAttribute("widget", widgetAttr)
-      restoredElement.textContent = originalTextContent
-
-      // originalChildren.forEach((child) => restoredElement.appendChild(child))
-
-      originalParent.replaceChild(restoredElement, target)
-      target = restoredElement
+      target.setAttribute("role", originalRole)
+      target.removeAttribute("class")
+      target.classList.remove(className)
+      target.removeEventListener("click", eventHandler)
     },
   }
 }
 
 const widgetButton = (target) => {
   const {
-    tagName: originalTag,
-    parent: originalParent,
+    role: originalRole,
     textContent: originalTextContent,
-    widgetAttr,
   } = getOriginalAttributes(target)
+
+  const className = "widget-button";
+  const eventHandler = () => console.log("Button clicked")
 
   return {
     init: (done) => {
       console.log("widgetButton:init")
 
-      const buttonElement = document.createElement("button")
-      buttonElement.setAttribute("widget", widgetAttr)
-      buttonElement.textContent = "BUTTON AFTER"
-
-      originalParent.replaceChild(buttonElement, target)
-      target = buttonElement
-
-      const eventHandler = () => console.log("Button clicked")
+      target.setAttribute("role", "button")
+      target.textContent = "BUTTON AFTER"
+      target.classList.add(className)
       target.addEventListener("click", eventHandler)
 
       done()
     },
     destroy: () => {
       console.log("widgetButton:destroy")
-      const restoredElement = document.createElement(originalTag)
 
-      restoredElement.setAttribute("widget", widgetAttr)
-      restoredElement.textContent = originalTextContent
-
-      originalParent.replaceChild(restoredElement, target)
-      target = originalParent
-      // target = restoredElement
+      target.setAttribute("role", originalRole)
+      target.textContent = originalTextContent
+      target.classList.remove(className)
+      target.removeEventListener("click", eventHandler)
     }
   }
 }
 
 const widgetLabel = (target) => {
   const {
-    tagName: originalTag,
-    parent: originalParent,
+    role: originalRole,
     textContent: originalTextContent,
-    widgetAttr,
-    children: originalChildren,
   } = getOriginalAttributes(target)
+
+  const className = "widget-label";
+  const eventHandler = () => console.log("Label clicked")
 
   return {
     init: (done) => {
       console.log("widgetLabel:init")
 
-      const labelElement = document.createElement("label")
-      labelElement.setAttribute("widget", widgetAttr)
-      labelElement.textContent = "LABEL AFTER"
-
-      originalParent.replaceChild(labelElement, target)
-      target = labelElement
-
-      const eventHandler = () => console.log("Label clicked")
+      target.setAttribute("role", "label")
+      target.textContent = "LABEL AFTER"
+      target.classList.add(className)
       target.addEventListener("click", eventHandler)
 
       done()
@@ -116,13 +89,10 @@ const widgetLabel = (target) => {
     destroy: () => {
       console.log("widgetLabel:destroy")
 
-      const restoredElement = document.createElement(originalTag)
-      restoredElement.setAttribute("widget", widgetAttr)
-      restoredElement.textContent = originalTextContent
-
-      originalParent.replaceChild(restoredElement, target)
-      target = restoredElement
-      // target = originalParent
+      target.setAttribute("role", originalRole)
+      target.textContent = originalTextContent
+      target.classList.remove(className)
+      target.removeEventListener("click", eventHandler)
     },
   }
 }
