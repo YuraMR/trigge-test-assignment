@@ -3,7 +3,25 @@ const getOriginalAttributes = (element) => ({
   textContent: element.textContent,
 })
 
-const restoreOriginalAttributes = ({ element, originalAttributes, className, eventListeners }) => {
+const setNewAttributes = (element, { className, eventListeners, role, textContent }) => {
+  if (role) {
+    element.setAttribute("role", role)
+  }
+
+  if (className) {
+    element.classList.add(className)
+  }
+
+  if (textContent) {
+    element.textContent = textContent
+  }
+
+  if (eventListeners) {
+    eventListeners.forEach(({ type, listener }) => element.addEventListener(type, listener))
+  }
+}
+
+const restoreOriginalAttributes = (element, { originalAttributes, className, eventListeners }) => {
   const {
     role: originalRole,
     textContent: originalTextContent,
@@ -39,9 +57,7 @@ const widgetA = (target) => {
     init: (done) => {
       console.log("widgetA:init")
 
-      target.setAttribute("role", "link")
-      target.classList.add(className)
-      eventListeners.forEach(({ type, listener }) => target.addEventListener(type, listener))
+      setNewAttributes(target, { className, eventListeners, role: "link" })
 
       done()
     },
@@ -49,7 +65,7 @@ const widgetA = (target) => {
     destroy: () => {
       console.log("widgetA:destroy")
 
-      restoreOriginalAttributes({ element: target, originalAttributes, className, eventListeners })
+      restoreOriginalAttributes(target, { originalAttributes, className, eventListeners })
     },
   }
 }
@@ -65,17 +81,14 @@ const widgetButton = (target) => {
     init: (done) => {
       console.log("widgetButton:init")
 
-      target.setAttribute("role", "button")
-      target.textContent = "BUTTON AFTER"
-      target.classList.add(className)
-      eventListeners.forEach(({ type, listener }) => target.addEventListener(type, listener))
+      setNewAttributes(target, { className, eventListeners, role: "button", textContent: "BUTTON AFTER" })
 
       done()
     },
     destroy: () => {
       console.log("widgetButton:destroy")
 
-      restoreOriginalAttributes({ element: target, originalAttributes, className, eventListeners })
+      restoreOriginalAttributes(target, { originalAttributes, className, eventListeners })
     }
   }
 }
@@ -91,10 +104,7 @@ const widgetLabel = (target) => {
     init: (done) => {
       console.log("widgetLabel:init")
 
-      target.setAttribute("role", "label")
-      target.textContent = "LABEL AFTER"
-      target.classList.add(className)
-      eventListeners.forEach(({ type, listener }) => target.addEventListener(type, listener))
+      setNewAttributes(target, { className, eventListeners, role: "label", textContent: "LABEL AFTER" })
 
       done()
     },
@@ -102,7 +112,7 @@ const widgetLabel = (target) => {
     destroy: () => {
       console.log("widgetLabel:destroy")
 
-      restoreOriginalAttributes({ element: target, originalAttributes, className, eventListeners })
+      restoreOriginalAttributes(target, { originalAttributes, className, eventListeners })
     },
   }
 }
