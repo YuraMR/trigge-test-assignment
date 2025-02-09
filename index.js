@@ -3,14 +3,37 @@ const getOriginalAttributes = (element) => ({
   textContent: element.textContent,
 })
 
-const widgetA = (target) => {
+const restoreOriginalAttributes = ({ element, originalAttributes, className, eventListeners }) => {
   const {
     role: originalRole,
-  } = getOriginalAttributes(target)
+    textContent: originalTextContent,
+  } = originalAttributes
+
+  if (originalRole) {
+    element.setAttribute("role", originalRole)
+  } else {
+    element.removeAttribute("role")
+  }
+
+  element.textContent = originalTextContent
+
+  element.classList.remove(className)
+
+  if (element.classList.length === 0) {
+    element.removeAttribute("class")
+  }
+
+  eventListeners.forEach(({ type, listener }) => {
+    element.removeEventListener(type, listener)
+  })
+}
+
+const widgetA = (target) => {
+  const originalAttributes = getOriginalAttributes(target)
 
   const className = "widget-link";
-
-  const eventHandler = () => console.log("Link clicked")
+  const handleClick = () => console.log("Link clicked")
+  const eventListeners = [{ type: "click", listener: handleClick }]
 
   return {
     init: (done) => {
@@ -18,7 +41,7 @@ const widgetA = (target) => {
 
       target.setAttribute("role", "link")
       target.classList.add(className)
-      target.addEventListener("click", eventHandler)
+      eventListeners.forEach(({ type, listener }) => target.addEventListener(type, listener))
 
       done()
     },
@@ -26,22 +49,17 @@ const widgetA = (target) => {
     destroy: () => {
       console.log("widgetA:destroy")
 
-      target.setAttribute("role", originalRole)
-      target.removeAttribute("class")
-      target.classList.remove(className)
-      target.removeEventListener("click", eventHandler)
+      restoreOriginalAttributes({ element: target, originalAttributes, className, eventListeners })
     },
   }
 }
 
 const widgetButton = (target) => {
-  const {
-    role: originalRole,
-    textContent: originalTextContent,
-  } = getOriginalAttributes(target)
+  const originalAttributes = getOriginalAttributes(target)
 
   const className = "widget-button";
-  const eventHandler = () => console.log("Button clicked")
+  const handleClick = () => console.log("Button clicked")
+  const eventListeners = [{ type: "click", listener: handleClick }]
 
   return {
     init: (done) => {
@@ -50,29 +68,24 @@ const widgetButton = (target) => {
       target.setAttribute("role", "button")
       target.textContent = "BUTTON AFTER"
       target.classList.add(className)
-      target.addEventListener("click", eventHandler)
+      eventListeners.forEach(({ type, listener }) => target.addEventListener(type, listener))
 
       done()
     },
     destroy: () => {
       console.log("widgetButton:destroy")
 
-      target.setAttribute("role", originalRole)
-      target.textContent = originalTextContent
-      target.classList.remove(className)
-      target.removeEventListener("click", eventHandler)
+      restoreOriginalAttributes({ element: target, originalAttributes, className, eventListeners })
     }
   }
 }
 
 const widgetLabel = (target) => {
-  const {
-    role: originalRole,
-    textContent: originalTextContent,
-  } = getOriginalAttributes(target)
+  const originalAttributes = getOriginalAttributes(target)
 
   const className = "widget-label";
-  const eventHandler = () => console.log("Label clicked")
+  const handleClick = () => console.log("Label clicked")
+  const eventListeners = [{ type: "click", listener: handleClick }]
 
   return {
     init: (done) => {
@@ -81,7 +94,7 @@ const widgetLabel = (target) => {
       target.setAttribute("role", "label")
       target.textContent = "LABEL AFTER"
       target.classList.add(className)
-      target.addEventListener("click", eventHandler)
+      eventListeners.forEach(({ type, listener }) => target.addEventListener(type, listener))
 
       done()
     },
@@ -89,10 +102,7 @@ const widgetLabel = (target) => {
     destroy: () => {
       console.log("widgetLabel:destroy")
 
-      target.setAttribute("role", originalRole)
-      target.textContent = originalTextContent
-      target.classList.remove(className)
-      target.removeEventListener("click", eventHandler)
+      restoreOriginalAttributes({ element: target, originalAttributes, className, eventListeners })
     },
   }
 }
