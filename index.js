@@ -1,6 +1,8 @@
 const getOriginalAttributes = (element) => ({
   role: element.getAttribute("role"),
   textContent: element.textContent,
+  innerText: element.innerText,
+  innerHTML: element.innerHTML,
 })
 
 const setNewAttributes = (element, { className, eventListeners, role, textContent }) => {
@@ -25,6 +27,8 @@ const restoreOriginalAttributes = (element, { originalAttributes, className, eve
   const {
     role: originalRole,
     textContent: originalTextContent,
+    innerText: originalInnerText,
+    innerHTML: originalInnerHTML,
   } = originalAttributes
 
   if (originalRole) {
@@ -33,9 +37,15 @@ const restoreOriginalAttributes = (element, { originalAttributes, className, eve
     element.removeAttribute("role")
   }
 
-  element.textContent = originalTextContent
+  const shouldRestoreTextContent = originalTextContent === originalInnerText && originalTextContent && originalInnerHTML;
 
-  element.classList.remove(className)
+  if (shouldRestoreTextContent) {
+    element.textContent = originalTextContent
+  }
+
+  if (className) {
+    element.classList.remove(className)
+  }
 
   if (element.classList.length === 0) {
     element.removeAttribute("class")
