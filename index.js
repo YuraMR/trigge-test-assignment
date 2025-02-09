@@ -139,11 +139,16 @@ const flawlessWidgetLibrary = ({ target, callback }) => {
   const widgets = new Map()
 
   const initQueue = []
+  const errors = []
 
   const processInitQueue = async () => {
     while (initQueue.length > 0) {
       const { widget, done } = initQueue.shift()
-      await widget.init(done)
+      try {
+        await widget.init(done)
+      } catch (error) {
+        errors.push(error)
+      }
     }
   }
 
@@ -165,17 +170,22 @@ const flawlessWidgetLibrary = ({ target, callback }) => {
           const widgetName = widgetAttr.split("/")[1]
           const createWidget = WIDGETS[widgetName]
 
-          if (createWidget) {
-            const widgetInstance = createWidget(node)
-            widgets.set(node, widgetInstance)
+          if (createWidget && !widgets.has(node)) {
+            try {
+              const widgetInstance = createWidget(node)
+              widgets.set(node, widgetInstance)
 
-            await queueWidgetInit(widgetInstance, () => {
-              widgetsInitialized++
-              if (widgetsInitialized === widgets.size) {
-                console.log("All widgets initialized")
-                callback()
-              }
-            })
+              await queueWidgetInit(widgetInstance, () => {
+                widgetsInitialized++
+
+                if (widgetsInitialized === widgets.size) {
+                  console.log("All widgets initialized")
+                  callback(errors.length ? errors : null)
+                }
+              })
+            } catch (error) {
+              errors.push(error)
+            }
           }
         }
 
@@ -184,12 +194,21 @@ const flawlessWidgetLibrary = ({ target, callback }) => {
 
       await traverse(target)
     },
-
     destroy: () => {
-      widgets.forEach((widgetInstance, node) => {
-        widgetInstance.destroy()
-        widgets.delete(node)
-      })
-    },
+      console.log("flawlessWidgetLibrary:destroy")
+
+      const traverseDestroy = (node) => {
+        Array.from(node.children).forEach(traverseDestroy)
+
+        if (widgets.has(node)) {
+          const widgetInstance = widgets.get(node)
+          widgetInstance.destroy()
+          widgets.delete(node)
+        }
+      }
+
+      traverseDestroy(target)
+    }
   }
 }
+
