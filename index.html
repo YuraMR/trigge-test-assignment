@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Valid Index</title>
-        <link rel="stylesheet" href="index.css">
+        <link rel="stylesheet" href="flawlessWidgetLibrary/index.css">
     </head>
     <body>
         <div id="root">
@@ -14,29 +14,7 @@
             <div widget="widgets/label">Label Before</div>
         </div>
 
+        <script src="flawlessWidgetLibrary/index.js"></script>
         <script src="index.js"></script>
-        <script>
-          (async () => {
-            const root = document.getElementById('root');
-            console.log('Script executed after body, root element:', root);
-
-            const callback = () => {
-              console.log('Traversal complete');
-            };
-
-            if (root) {
-              const { init, destroy } = flawlessWidgetLibrary({ target: root, callback });
-              setTimeout(async () => {
-                await init({ root, callback });
-
-                setTimeout(() => {
-                  destroy();
-                }, 2000);
-              }, 2000);
-            } else {
-              console.error('Root element not found');
-            }
-          })();
-        </script>
     </body>
 </html>
