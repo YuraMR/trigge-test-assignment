@@ -1,20 +1,24 @@
+const root = document.getElementById('root')
+let library = null
 
-const root = document.getElementById('root');
-console.log('Script executed after body, root element:', root);
-
-const callback = () => {
-  console.log('Traversal complete');
-};
-
-if (root) {
-  const { init, destroy } = flawlessWidgetLibrary({ target: root, callback });
-  setTimeout(async () => {
-    await init({ root, callback });
-
-    setTimeout(() => {
-      destroy();
-    }, 2000);
-  }, 2000);
-} else {
-  console.error('Root element not found');
+const callback = (errors) => {
+  if (errors) {
+    console.error("Errors:", errors)
+  } else {
+    console.log("All widgets initialized")
+  }
 }
+
+document.getElementById("init").addEventListener("click", async () => {
+  if (!library) {
+    library = flawlessWidgetLibrary({ target: root, callback })
+  }
+  await library.init()
+})
+
+document.getElementById("destroy").addEventListener("click", () => {
+  if (library) {
+    library.destroy()
+    library = null
+  }
+})
