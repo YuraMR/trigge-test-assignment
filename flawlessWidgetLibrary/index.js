@@ -138,25 +138,13 @@ const flawlessWidgetLibrary = ({ target, callback }) => {
 
   const widgets = new Map()
 
-  const initQueue = []
   const errors = []
 
-  const processInitQueue = async () => {
-    while (initQueue.length > 0) {
-      const { widget, done } = initQueue.shift()
-      try {
-        await widget.init(done)
-      } catch (error) {
-        errors.push(error)
-      }
-    }
-  }
-
   const queueWidgetInit = async (widget, done) => {
-    initQueue.push({ widget, done })
-
-    if (initQueue.length === 1) {
-      await processInitQueue()
+    try {
+      await widget.init(done)
+    } catch (error) {
+      errors.push(error)
     }
   }
 
