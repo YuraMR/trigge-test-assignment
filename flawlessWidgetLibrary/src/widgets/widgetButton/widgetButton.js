@@ -1,6 +1,6 @@
-import getOriginalAttributes from "../utils/getOriginalAttributes";
-import setNewAttributes from "../utils/setNewAttributes";
-import restoreOriginalAttributes from "../utils/restoreOriginalAttributes";
+import getOriginalAttributes from "../../utils/getOriginalAttributes/getOriginalAttributes";
+import setNewAttributes from "../../utils/setNewAttributes/setNewAttributes";
+import restoreOriginalAttributes from "../../utils/restoreOriginalAttributes/restoreOriginalAttributes";
 
 const widgetButton = (target) => {
   const originalAttributes = getOriginalAttributes(target)

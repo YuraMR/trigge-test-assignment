@@ -1,6 +1,6 @@
-import widgetA from "./widgets/widgetA";
-import widgetButton from "./widgets/widgetButton";
-import widgetLabel from "./widgets/widgetLabel";
+import widgetA from "./widgets/widgetA/widgetA";
+import widgetButton from "./widgets/widgetButton/widgetButton";
+import widgetLabel from "./widgets/widgetLabel/widgetLabel";
 import "./index.css"
 
 const WIDGETS = {

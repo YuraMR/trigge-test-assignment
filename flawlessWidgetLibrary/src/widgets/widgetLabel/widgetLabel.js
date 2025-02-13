@@ -1,6 +1,6 @@
-import restoreOriginalAttributes from "../utils/restoreOriginalAttributes";
-import setNewAttributes from "../utils/setNewAttributes";
-import getOriginalAttributes from "../utils/getOriginalAttributes";
+import restoreOriginalAttributes from "../../utils/restoreOriginalAttributes/restoreOriginalAttributes";
+import setNewAttributes from "../../utils/setNewAttributes/setNewAttributes";
+import getOriginalAttributes from "../../utils/getOriginalAttributes/getOriginalAttributes";
 
 const widgetLabel = (target) => {
   const originalAttributes = getOriginalAttributes(target)
