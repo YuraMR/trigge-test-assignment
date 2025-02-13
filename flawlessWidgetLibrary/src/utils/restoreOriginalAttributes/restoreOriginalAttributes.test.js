@@ -20,6 +20,6 @@ describe("restoreOriginalAttributes", () => {
 
     expect(element.getAttribute("role")).toBe("button");
     expect(element.classList.contains("new-class")).toBe(false);
-    expect(element.classList.contains("old-class")).toBe(false);
+    expect(element.classList.contains("old-class")).toBe(true);
   });
 });

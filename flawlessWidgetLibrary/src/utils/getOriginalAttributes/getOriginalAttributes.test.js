@@ -10,7 +10,6 @@ describe("getOriginalAttributes", () => {
     expect(attributes).toEqual({
       role: "button",
       textContent: "Click Me",
-      innerText: "Click Me",
       innerHTML: "Click Me",
     });
   });

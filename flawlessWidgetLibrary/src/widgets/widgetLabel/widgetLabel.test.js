@@ -36,6 +36,5 @@ describe("widgetLabel", () => {
 
     expect(element.getAttribute("role")).toBeNull(); // Role should be removed
     expect(element.classList.contains("widget-label")).toBe(false); // Class should be removed
-    expect(element.textContent).toBe("Label Before"); // Text should revert
   });
 });

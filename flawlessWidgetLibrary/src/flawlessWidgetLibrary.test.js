@@ -31,15 +31,10 @@ describe("flawlessWidgetLibrary", () => {
     libraryInstance.init();
 
     const linkElement = root.querySelector("[widget='widgets/a']");
-    const buttonElement = root.querySelector("[widget='widgets/button']");
     const labelElement = root.querySelector("[widget='widgets/label']");
 
     expect(linkElement.getAttribute("role")).toBe("link");
     expect(linkElement.classList.contains("widget-link")).toBe(true);
-
-    // expect(buttonElement.getAttribute("role")).toBe("button");
-    // expect(buttonElement.classList.contains("widget-button")).toBe(true);
-    // expect(buttonElement.textContent).toBe("BUTTON AFTER");
 
     expect(labelElement.getAttribute("role")).toBe("label");
     expect(labelElement.classList.contains("widget-label")).toBe(true);
@@ -70,6 +65,5 @@ describe("flawlessWidgetLibrary", () => {
 
     expect(labelElement.getAttribute("role")).toBeNull();
     expect(labelElement.classList.contains("widget-label")).toBe(false);
-    // expect(labelElement.textContent).toBe("Label Before");
   });
 });

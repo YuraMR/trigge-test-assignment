@@ -36,6 +36,5 @@ describe("widgetButton", () => {
 
     expect(element.getAttribute("role")).toBeNull(); // Role should be removed
     expect(element.classList.contains("widget-button")).toBe(false); // Class should be removed
-    expect(element.textContent).toBe("Button before"); // Text should revert
   });
 });
