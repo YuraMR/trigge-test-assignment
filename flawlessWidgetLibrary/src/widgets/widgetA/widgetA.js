@@ -2,28 +2,32 @@ import getOriginalAttributes from "../../utils/getOriginalAttributes/getOriginal
 import setNewAttributes from "../../utils/setNewAttributes/setNewAttributes";
 import restoreOriginalAttributes from "../../utils/restoreOriginalAttributes/restoreOriginalAttributes";
 
-const widgetA = (target) => {
-  const originalAttributes = getOriginalAttributes(target)
+const widgetA = target => {
+  const originalAttributes = getOriginalAttributes(target);
 
   const className = "widget-link";
-  const handleClick = () => console.log("Link clicked")
-  const eventListeners = [{ type: "click", listener: handleClick }]
+  const handleClick = () => console.log("Link clicked");
+  const eventListeners = [{ type: "click", listener: handleClick }];
 
   return {
-    init: (done) => {
-      console.log("widgetA:init")
+    init: done => {
+      console.log("widgetA:init");
 
-      setNewAttributes(target, { className, eventListeners, role: "link" })
+      setNewAttributes(target, { className, eventListeners, role: "link" });
 
-      done()
+      done();
     },
 
     destroy: () => {
-      console.log("widgetA:destroy")
+      console.log("widgetA:destroy");
 
-      restoreOriginalAttributes(target, { originalAttributes, className, eventListeners })
-    },
-  }
-}
+      restoreOriginalAttributes(target, {
+        originalAttributes,
+        className,
+        eventListeners
+      });
+    }
+  };
+};
 
-export default widgetA
+export default widgetA;

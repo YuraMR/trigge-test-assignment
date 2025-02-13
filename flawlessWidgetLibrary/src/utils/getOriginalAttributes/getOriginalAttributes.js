@@ -1,8 +1,8 @@
-const getOriginalAttributes = (element) => ({
+const getOriginalAttributes = element => ({
   role: element.getAttribute("role"),
   textContent: element.textContent,
   innerText: element.innerText,
-  innerHTML: element.innerHTML,
-})
+  innerHTML: element.innerHTML
+});
 
-export default getOriginalAttributes
+export default getOriginalAttributes;

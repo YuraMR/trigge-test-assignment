@@ -23,9 +23,9 @@ describe("flawlessWidgetLibrary", () => {
   test("should initialize and apply attributes to all widgets", () => {
     const libraryInstance = flawlessWidgetLibrary({
       target: root,
-      callback: (errors) => {
+      callback: errors => {
         expect(errors).toBeNull();
-      },
+      }
     });
 
     libraryInstance.init();
@@ -44,9 +44,9 @@ describe("flawlessWidgetLibrary", () => {
   test("should correctly destroy all widgets and restore original content", () => {
     const libraryInstance = flawlessWidgetLibrary({
       target: root,
-      callback: (errors) => {
+      callback: errors => {
         expect(errors).toBeNull();
-      },
+      }
     });
 
     libraryInstance.init();

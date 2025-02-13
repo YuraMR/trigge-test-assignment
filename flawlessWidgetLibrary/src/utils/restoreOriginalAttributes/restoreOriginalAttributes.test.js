@@ -9,13 +9,13 @@ describe("restoreOriginalAttributes", () => {
       role: "button",
       textContent: "Original",
       innerText: "Original",
-      innerHTML: "Original",
+      innerHTML: "Original"
     };
 
     restoreOriginalAttributes(element, {
       originalAttributes,
       className: "new-class",
-      eventListeners: [],
+      eventListeners: []
     });
 
     expect(element.getAttribute("role")).toBe("button");

@@ -11,7 +11,7 @@ describe("setNewAttributes", () => {
       className: "test-class",
       role: "button",
       textContent: "Updated",
-      eventListeners: [{ type: "click", listener: mockClickHandler }],
+      eventListeners: [{ type: "click", listener: mockClickHandler }]
     });
 
     expect(element.classList.contains("test-class")).toBe(true);

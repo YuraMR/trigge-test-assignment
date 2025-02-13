@@ -2,27 +2,36 @@ import getOriginalAttributes from "../../utils/getOriginalAttributes/getOriginal
 import setNewAttributes from "../../utils/setNewAttributes/setNewAttributes";
 import restoreOriginalAttributes from "../../utils/restoreOriginalAttributes/restoreOriginalAttributes";
 
-const widgetButton = (target) => {
-  const originalAttributes = getOriginalAttributes(target)
+const widgetButton = target => {
+  const originalAttributes = getOriginalAttributes(target);
 
   const className = "widget-button";
-  const handleClick = () => console.log("Button clicked")
-  const eventListeners = [{ type: "click", listener: handleClick }]
+  const handleClick = () => console.log("Button clicked");
+  const eventListeners = [{ type: "click", listener: handleClick }];
 
   return {
-    init: (done) => {
-      console.log("widgetButton:init")
+    init: done => {
+      console.log("widgetButton:init");
 
-      setNewAttributes(target, { className, eventListeners, role: "button", textContent: "BUTTON AFTER" })
+      setNewAttributes(target, {
+        className,
+        eventListeners,
+        role: "button",
+        textContent: "BUTTON AFTER"
+      });
 
-      done()
+      done();
     },
     destroy: () => {
-      console.log("widgetButton:destroy")
+      console.log("widgetButton:destroy");
 
-      restoreOriginalAttributes(target, { originalAttributes, className, eventListeners })
+      restoreOriginalAttributes(target, {
+        originalAttributes,
+        className,
+        eventListeners
+      });
     }
-  }
-}
+  };
+};
 
-export default widgetButton
+export default widgetButton;

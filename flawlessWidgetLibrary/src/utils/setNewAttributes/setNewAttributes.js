@@ -1,19 +1,24 @@
-const setNewAttributes = (element, { className, eventListeners, role, textContent }) => {
+const setNewAttributes = (
+  element,
+  { className, eventListeners, role, textContent }
+) => {
   if (role) {
-    element.setAttribute("role", role)
+    element.setAttribute("role", role);
   }
 
   if (className) {
-    element.classList.add(className)
+    element.classList.add(className);
   }
 
   if (textContent) {
-    element.textContent = textContent
+    element.textContent = textContent;
   }
 
   if (eventListeners) {
-    eventListeners.forEach(({ type, listener }) => element.addEventListener(type, listener))
+    eventListeners.forEach(({ type, listener }) =>
+      element.addEventListener(type, listener)
+    );
   }
-}
+};
 
-export default setNewAttributes
+export default setNewAttributes;
