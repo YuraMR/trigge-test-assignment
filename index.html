@@ -3,35 +3,101 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Valid Index</title>
+        <title>Trigge test assignment</title>
+        <link rel="stylesheet" href="index.css">
     </head>
     <body>
-        <div id="root">
-            <div widget="widgets/a">
-                <div widget="widgets/b"></div>
+
+        <h1>Trigge test assignment</h1>
+
+        <div class="container">
+
+            <div id="test-tree" class="section">
+                <h2>Test DOM Tree</h2>
+
+                <div class="test-tree">
+                    <div widget="widgets/a">
+                        <div widget="widgets/button">Button Widget</div>
+                    </div>
+                    <div class="regular-node">Regular Node 1</div>
+                    <div widget="widgets/label">Label Widget</div>
+                    <div class="regular-node">Regular Node 2</div>
+                </div>
             </div>
-            <div></div>
-            <div widget="widgets/c"></div>
+
+            <div id="controls" class="section">
+                <h2>Controls</h2>
+                <button id="init">Init</button>
+                <button id="destroy">Destroy</button>
+            </div>
+
+            <div class="section">
+                <h2>Info Block</h2>
+                <div>
+                    <p><strong>Selected Node:</strong> <span id="selected-node">None</span></p>
+                    <p><strong>Widget Type:</strong> <span id="widget-type">-</span></p>
+                    <p><strong>State:</strong> <span id="widget-state">-</span></p>
+                </div>
+            </div>
         </div>
-        <script src="index.js"></script>
+
+
+        <script src="flawlessWidgetLibrary/dist/flawlessWidgetLibrary.js"></script>
         <script>
-          (async () => {
-            const root = document.getElementById('root');
-            console.log('Script executed after body, root element:', root);
+          const widgetLibrary = flawlessWidgetLibrary.default
 
-            const callback = () => {
-              console.log('Traversal complete');
-            };
+          document.addEventListener("DOMContentLoaded", () => {
+            const root = document.getElementById("test-tree")
+            const initButton = document.getElementById("init")
+            const destroyButton = document.getElementById("destroy")
 
-            if (root) {
-              await init({ root, callback });
-            } else {
-              console.error('Root element not found');
+            let libraryInstance
+            let selectedNode = null
+
+            const callback = (errors, node) => {
+              const relativeSelector = node ? node.getAttribute("widget") || "regular-node" : "unknown"
+              if (errors) {
+                console.error(`Error initializing ${relativeSelector}:`, errors)
+              } else {
+                console.log(`Widget ${relativeSelector} initialized successfully`)
+              }
             }
-          })();
+
+            root.addEventListener("click", (event) => {
+              if (selectedNode) {
+                selectedNode.classList.remove("selected")
+              }
+
+              selectedNode = event.target
+              selectedNode.classList.add("selected")
+
+              const widgetType = selectedNode.getAttribute("widget") || "Regular Node"
+              const state = selectedNode.classList.contains("widget-initialized")
+                ? "Initialized"
+                : selectedNode.classList.contains("widget-failed") ? "Failed" : "Not initialized"
+
+              document.getElementById("selected-node").textContent = selectedNode.innerText
+              document.getElementById("widget-type").textContent = widgetType
+              document.getElementById("widget-state").textContent = state
+            })
+
+            initButton.addEventListener("click", async () => {
+              libraryInstance = widgetLibrary({ target: root, callback })
+
+              await libraryInstance.init()
+              document.querySelectorAll("[widget]").forEach(node => node.classList.add("widget-initialized"))
+            })
+
+            destroyButton.addEventListener("click", () => {
+              if (libraryInstance) {
+                libraryInstance.destroy()
+                libraryInstance = null
+                document.querySelectorAll("[widget]").forEach(node => {
+                  node.classList.remove("widget-initialized", "widget-failed")
+                })
+              }
+            })
+          })
         </script>
-    </body>
-
-
     </body>
 </html>

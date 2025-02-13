@@ -1,2 +1,7 @@
 # .idea
 .idea
+
+# flawlessWidgetLibrary
+/flawlessWidgetLibrary/node_modules
+/flawlessWidgetLibrary/dist
+/flawlessWidgetLibrary/coverage
