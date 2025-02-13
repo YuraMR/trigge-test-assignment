@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Valid Index</title>
-        <link rel="stylesheet" href="flawlessWidgetLibrary/index.css">
+        <link rel="stylesheet" href="flawlessWidgetLibrary/src/index.css">
     </head>
     <body>
 
@@ -20,7 +20,38 @@
             <div widget="widgets/label">Label Before</div>
         </div>
 
-        <script src="flawlessWidgetLibrary/index.js"></script>
-        <script src="index.js"></script>
+        <script src="flawlessWidgetLibrary/dist/flawlessWidgetLibrary.js"></script>
+        <script>
+          const widgetLibrary = flawlessWidgetLibrary.default;
+
+          document.addEventListener("DOMContentLoaded", () => {
+            const root = document.getElementById("root")
+            const initButton = document.getElementById("init")
+            const destroyButton = document.getElementById("destroy")
+
+            let libraryInstance
+
+            const callback = (errors) => {
+              if (errors) {
+                console.error("Errors:", errors)
+              } else {
+                console.log("All widgets initialized")
+              }
+            }
+
+            initButton.addEventListener("click", async () => {
+              libraryInstance = widgetLibrary({ target: root, callback })
+
+              await libraryInstance.init()
+            })
+
+            destroyButton.addEventListener("click", () => {
+              if (libraryInstance) {
+                libraryInstance.destroy()
+                libraryInstance = null
+              }
+            })
+          })
+        </script>
     </body>
 </html>
