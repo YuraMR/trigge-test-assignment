@@ -1,7 +1,7 @@
 import widgetA from "./widgets/widgetA";
 import widgetButton from "./widgets/widgetButton";
 import widgetLabel from "./widgets/widgetLabel";
-
+import "./index.css"
 
 const WIDGETS = {
   a: widgetA,
