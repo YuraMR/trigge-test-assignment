@@ -4,6 +4,9 @@ module.exports = {
   transform: {
     "^.+\\.js$": "babel-jest",
   },
+  moduleNameMapper: {
+    "\\.(css|less|scss|sass)$": "<rootDir>/__mocks__/styleMock.js", // ✅ Mock CSS files
+  },
   testMatch: ["<rootDir>/src/**/*.test.js"],
   collectCoverage: true,
   collectCoverageFrom: [
